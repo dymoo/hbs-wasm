@@ -1,14 +1,14 @@
 [package]
-name = "wasm-minify"
-version = "0.1.0"
-authors = ["Dylan Moore <60218243+dymoo@users.noreply.github.com>"]
+name = "hbs-wasm"
+version = "0.1.1"
+authors = ["Dylan <60218243+dymoo@users.noreply.github.com>"]
 edition = "2018"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-wasm-bindgen = "0.2"
 html-minifier = "3.0.9"
 handlebars = "3.5.3"
-serde_json = "1.0.64"
+serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen = { version = "0.2", features = ["serde-serialize"] }

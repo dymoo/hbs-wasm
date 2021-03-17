@@ -3,19 +3,19 @@ extern crate html_minifier;
 
 use handlebars::Handlebars;
 use html_minifier::HTMLMinifier;
-use serde_json::Value;
 use std::str;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn render(template: &str, ctx: &str, minify: bool) -> String {
+pub fn render(template: &str, ctx: &JsValue, minify: Option<bool>) -> String {
     let hbs = Handlebars::new();
-    let mut html_minifier = HTMLMinifier::new();
 
-    let v: Value = serde_json::from_str(ctx).unwrap();
-    let mut rendered = hbs.render_template(template, &v).unwrap();
+    let json_value: handlebars::JsonValue = ctx.into_serde().unwrap();
+    let mut rendered = hbs.render_template(template, &json_value).unwrap();
 
-    if minify {
+    if minify.unwrap_or(true) {
+        let mut html_minifier = HTMLMinifier::new();
+
         html_minifier.digest(rendered).unwrap();
         rendered = str::from_utf8(html_minifier.get_html())
             .unwrap()
